@@ -94,7 +94,7 @@ public class OceanLifeSpawner : MonoBehaviour
     bool TryGetValidSpawnPoint(out Vector2 point)
     {
         point = Vector2.zero;
-        float poolRadius = transform.localScale.x / 2f;
+        float poolRadius = transform.lossyScale.x / 2f;
 
         int maxAttempts = 100;
 
