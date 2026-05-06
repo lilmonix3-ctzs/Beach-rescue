@@ -14,6 +14,10 @@ public class Reduce : MonoBehaviour
     [Header("速度对面积减少的影响比例")]
     [SerializeField] private float RatioOfVelocityToAreaReduction = 0.1f; // 速度对面积减少的影响比例，生物量应限制最大速度
 
+    //调整（fsun）新增开关
+    [Header("是否开启扣水功能")]
+    [SerializeField] bool isReduce = false;
+
     private List<OceanLife> oceanLives;
 
     private float currentArea;
@@ -28,14 +32,18 @@ public class Reduce : MonoBehaviour
         currentArea = startArea;
         rb = GetComponent<Rigidbody2D>();
         GetOceanLife();
-       
+        scaleUniform();
     }
 
     void Update()
     {
         DieOceanLife();
-        ReduceByTime();
-        ReduceByVelocity();
+        if (isReduce)
+        {
+            ReduceByTime();
+            ReduceByVelocity();
+        }
+        scaleUniform();
     }
     void ReduceByTime()
     {
@@ -44,12 +52,6 @@ public class Reduce : MonoBehaviour
             // 面积线性减少
             currentArea -= areaReducePerSecond * Time.deltaTime;
             currentArea = Mathf.Max(currentArea, 0);
-
-            // 由面积求半径
-            float radius = Mathf.Sqrt(currentArea / Mathf.PI);
-
-            // 等比缩放
-            transform.localScale = new Vector3(radius, radius, 1);
         }
     }
     void ReduceByVelocity()
@@ -60,12 +62,16 @@ public class Reduce : MonoBehaviour
             float reduceAmount = Time.deltaTime * rb.velocity.magnitude * RatioOfVelocityToAreaReduction; 
             currentArea -= reduceAmount;
             currentArea = Mathf.Max(currentArea, 0);
-
-            // 由面积求半径
-            float radius = Mathf.Sqrt(currentArea / Mathf.PI);
-            // 等比缩放
-            transform.localScale = new Vector3(radius, radius, 1);
         }
+    }
+
+    //调整（fsun）整合等比缩放
+    private void scaleUniform()
+    {
+        // 由面积求半径
+        float radius = Mathf.Sqrt(currentArea / Mathf.PI);
+        // 等比缩放
+        transform.localScale = new Vector3(radius, radius, 1);
     }
 
     void DieOceanLife()
@@ -161,6 +167,7 @@ public class Reduce : MonoBehaviour
         other.areaReducePerSecond = 0f;
 
         Destroy(other.gameObject);
+
     }
 
     //快速排序
@@ -198,5 +205,11 @@ public class Reduce : MonoBehaviour
         arr[left] = arr[i];
         arr[i] = pivot;
         return i;
+    }
+
+    //调整（fsun）新增获得水域面积方法
+    public float GetCurrentArea()
+    {
+        return currentArea;
     }
 }
