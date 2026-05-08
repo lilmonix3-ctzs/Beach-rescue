@@ -9,10 +9,12 @@ public class MouseDirectionMovement2D : MonoBehaviour
     private Vector2 direction;
     public float maxSpeed = 10f;
 
-
+ 
+    public Rigidbody2D childRb;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        //childRb = transform.GetComponentInChildren<Rigidbody2D>();
     }
 
     void Update()
@@ -21,6 +23,7 @@ public class MouseDirectionMovement2D : MonoBehaviour
         mousePos.z = 0f;
 
         direction = (mousePos - transform.position).normalized;
+        //ParentPositionUpdate();
     }
 
     void FixedUpdate()
@@ -37,6 +40,12 @@ public class MouseDirectionMovement2D : MonoBehaviour
         velocity = Vector2.ClampMagnitude(velocity, maxSpeed);
 
         rb.velocity = velocity;
+        
+    }
+
+    void ParentPositionUpdate()
+    {
+        childRb.velocity = rb.velocity;
     }
 }
 

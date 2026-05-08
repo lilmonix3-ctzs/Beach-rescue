@@ -25,7 +25,7 @@ public class OceanLifeSpawner : MonoBehaviour
 
     void Start()
     {
-        poolReduce = GetComponent<Reduce>();
+        poolReduce = GetComponentInChildren<Reduce>();
     }
 
     void Update()

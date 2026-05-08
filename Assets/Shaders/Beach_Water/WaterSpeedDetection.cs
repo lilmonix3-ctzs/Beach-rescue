@@ -10,6 +10,7 @@ public class WaterSpeedDetection : MonoBehaviour
     public float speed = 0.0f;
     public Vector3 MovingDir;
     public Vector3 lastFramePos = Vector3.zero;
+    public float testspeed = 0.0f;
 
 
     private void DetectSpeed()
@@ -32,6 +33,7 @@ public class WaterSpeedDetection : MonoBehaviour
 
     private void Update()
     {
+        this.transform.position += new Vector3(0.01f * testspeed, 0, 0);
         if (Water != null && mat != null)
         {
             DetectSpeed();

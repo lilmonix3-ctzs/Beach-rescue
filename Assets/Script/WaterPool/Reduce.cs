@@ -94,7 +94,8 @@ public class Reduce : MonoBehaviour
 
     void GetOceanLife()
     {
-        oceanLives = new List<OceanLife>(GetComponentsInChildren<OceanLife>());
+        
+        oceanLives = new List<OceanLife>(transform.parent.gameObject.GetComponentsInChildren<OceanLife>());
 
         // 快速排序
         if (oceanLives.Count > 0)
@@ -115,6 +116,7 @@ public class Reduce : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        Debug.Log("碰撞");
         if (collision == null) return;
 
         Reduce otherReduce = collision.collider.GetComponent<Reduce>();
@@ -141,15 +143,15 @@ public class Reduce : MonoBehaviour
         areaNeededByLife += other.areaNeededByLife;
 
         // 将 other 中的 OceanLife 物体重新 parent 到当前水池，并加入本池列表（不再重复增加 areaNeeded/areaReduce）
-        OceanLife[] others = other.GetComponentsInChildren<OceanLife>();
+        OceanLife[] others = other.transform.parent.gameObject.GetComponentsInChildren<OceanLife>();
         foreach (var ol in others)
         {
             // 如果已经是本池的子物体则跳过
             if (ol == null) continue;
-            if (ol.transform.IsChildOf(this.transform)) continue;
+            if (ol.transform.IsChildOf(this.transform.parent.transform)) continue;
 
             // 重新设置父对象（保持世界坐标）
-            ol.transform.SetParent(this.transform, true);
+            ol.transform.SetParent(this.transform.parent.transform, true);
             oceanLives.Add(ol);
         }
 
