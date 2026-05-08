@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1454654991336343435}
   - component: {fileID: 2336609942137892532}
   - component: {fileID: 2326779070451371233}
+  - component: {fileID: 7094040867446903548}
   m_Layer: 0
   m_Name: OceanLife
   m_TagString: Oceanlife
@@ -99,5 +100,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lifeName: 
   lifeValue: 20
-  lifeArea: 10
-  waterDecreaseRate: 1
+  lifeArea: 1
+  waterDecreaseRate: 0.1
+--- !u!114 &7094040867446903548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 614950610279627793}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c12296eed18b6c4dbcd8673ed9ec4fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

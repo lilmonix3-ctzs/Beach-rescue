@@ -119,6 +119,10 @@ public class Reduce : MonoBehaviour
         Debug.Log("碰撞");
         if (collision == null) return;
 
+        // 检查碰撞物体标签是否为 Player
+
+        if (collision.gameObject.CompareTag("WaterPool") && this.CompareTag("WaterPool") )return;
+
         Reduce otherReduce = collision.collider.GetComponent<Reduce>();
         if (otherReduce == null || otherReduce == this) return;
 
@@ -170,6 +174,8 @@ public class Reduce : MonoBehaviour
 
         Destroy(other.gameObject);
 
+        // 新增（fsun）重新排列所有鱼的位置
+        ResortFishPositions();
     }
 
     //快速排序
@@ -213,5 +219,23 @@ public class Reduce : MonoBehaviour
     public float GetCurrentArea()
     {
         return currentArea;
+    }
+
+    // 新增（fsun）重新排列所有鱼的位置
+    void ResortFishPositions()
+    {
+        if (oceanLives == null || oceanLives.Count == 0) return;
+
+        // 获取当前水池半径
+        float poolRadius = transform.localScale.x / 2.5f;
+
+        // 使用 ItemRandomPlacer 重新排列
+        ItemRandomPlacer.RandomPlaceInCircle(
+            transform.parent,    // 父物体（水池容器）
+            "Oceanlife",            // 鱼标签
+            transform.position, // 圆心
+            poolRadius,         // 半径
+            0.2f        // 格子大小
+        );
     }
 }
