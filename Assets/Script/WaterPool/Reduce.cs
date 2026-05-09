@@ -24,15 +24,19 @@ public class Reduce : MonoBehaviour
 
     private float areaNeededByLife = 0f; // 当前生物需要的总面积
 
+    private int ValueOfLife; // 当前生物的总价值（积分）
+
     public Rigidbody2D rb;
     
 
     void Start()
-    {
+    {   
+        ValueOfLife = 0;
         currentArea = startArea;
         rb = GetComponent<Rigidbody2D>();
         GetOceanLife();
         scaleUniform();
+        
     }
 
     void Update()
@@ -44,6 +48,14 @@ public class Reduce : MonoBehaviour
             ReduceByVelocity();
         }
         scaleUniform();
+
+        // 注意：确保 DataStore.Instance 不为 null（此处保持原逻辑）
+        if (DataStore.Instance != null && ValueOfLife!=0)
+            DataStore.Instance.SetScore(ValueOfLife);
+
+        Debug.Log($"当前分数：{DataStore.Instance.Score}");
+        if (currentArea==0)
+            GameOver.Instance.ShowGameOver();
     }
     void ReduceByTime()
     {
@@ -76,26 +88,52 @@ public class Reduce : MonoBehaviour
 
     void DieOceanLife()
     {
-        if (areaNeededByLife > currentArea && oceanLives.Count!=0)
+        if (oceanLives == null || oceanLives.Count == 0) return;
+
+        if (areaNeededByLife > currentArea && oceanLives.Count != 0)
         {
             Debug.Log("当前面积不足以支持所有生物");
 
             // 取出列表最后一个生物
             OceanLife lastLife = oceanLives[oceanLives.Count - 1];
 
-            // 减去消耗和占用面积
-            areaReducePerSecond -= lastLife.GetWaterDecreaseRate();
-            areaNeededByLife -= lastLife.GetLifeArea();
+            if (lastLife != null)
+            {
+                int lifeVal = lastLife.GetLifeValue();
+                float lifeArea = lastLife.GetLifeArea();
+                float lifeRate = lastLife.GetWaterDecreaseRate();
 
-            lastLife.Die();
-            oceanLives.Remove(lastLife); // 列表自动变短，不会留null
+                // 减去消耗和占用面积
+                areaReducePerSecond -= lifeRate;
+                areaNeededByLife -= lifeArea;
+
+                // 从分数扣除（先缓存再销毁）
+                ValueOfLife -= lifeVal;
+                if (ValueOfLife < 0) ValueOfLife = 0;
+
+                lastLife.Die();
+            }
+
+            oceanLives.RemoveAt(oceanLives.Count - 1); // 列表自动变短，不会留null
         }
     }
 
-    void GetOceanLife()
+    // 现在公开，便于生成器在生成完成后调用刷新
+    public void GetOceanLife()
     {
-        
-        oceanLives = new List<OceanLife>(transform.parent.gameObject.GetComponentsInChildren<OceanLife>());
+        // 重新收集并重置计数
+        ValueOfLife = 0;
+
+        oceanLives = new List<OceanLife>();
+
+        // 首先尝试在 parent 下查找（如果 parent 为 null，则在自身查找）
+        Transform container = transform.parent != null ? transform.parent : transform;
+        OceanLife[] found = container.GetComponentsInChildren<OceanLife>(true);
+
+        if (found != null && found.Length > 0)
+            oceanLives.AddRange(found);
+
+        Debug.Log($"GetOceanLife: 在 {container.name} 下找到 {oceanLives.Count} 个 OceanLife");
 
         // 快速排序
         if (oceanLives.Count > 0)
@@ -106,11 +144,14 @@ public class Reduce : MonoBehaviour
 
         foreach (var ol in oceanLives)
         {
-            Debug.Log("找到子物体：" + ol.gameObject.name);
+            if (ol == null) continue;
+            Debug.Log("找到子物体：" + ol.gameObject.name + " value=" + ol.GetLifeValue());
             areaNeededByLife += ol.GetLifeArea();
             areaReduceFromLife += ol.GetWaterDecreaseRate();
+            ValueOfLife += ol.GetLifeValue();
         }
 
+        Debug.Log($"ValueOfLife 累加后 = {ValueOfLife}");
         areaReducePerSecond = areaReduceFromLife;
     }
 
@@ -143,8 +184,8 @@ public class Reduce : MonoBehaviour
         currentArea += other.currentArea;
 
         // 将另一个水池的生物消耗/占用数据加入（使用其他池上已统计的值，避免重复统计）
-        areaReducePerSecond += other.areaReducePerSecond;
-        areaNeededByLife += other.areaNeededByLife;
+        //areaReducePerSecond += other.areaReducePerSecond;
+        //areaNeededByLife += other.areaNeededByLife;
 
         // 将 other 中的 OceanLife 物体重新 parent 到当前水池，并加入本池列表（不再重复增加 areaNeeded/areaReduce）
         OceanLife[] others = other.transform.parent.gameObject.GetComponentsInChildren<OceanLife>();
@@ -159,8 +200,10 @@ public class Reduce : MonoBehaviour
             oceanLives.Add(ol);
             areaNeededByLife += ol.GetLifeArea();
             areaReducePerSecond += ol.GetWaterDecreaseRate();
+            ValueOfLife += ol.GetLifeValue();
 
             Debug.Log($"合并水池：将 {ol.gameObject.name} 从 {other.gameObject.name} 移动到 {this.gameObject.name}");
+            Debug.Log($"价值 {DataStore.Instance.Score}");
         }
 
         // 重新排序海洋生物列表
@@ -241,5 +284,18 @@ public class Reduce : MonoBehaviour
             poolRadius,         // 半径
             0.2f        // 格子大小
         );
+    }
+
+    public float GetValueOfLife()
+    {
+        return ValueOfLife;
+    }
+    public float GetcurrentArea()
+    {
+        return currentArea;
+    }
+    public float GetReduceRate()
+    {
+        return areaReducePerSecond+ rb.velocity.magnitude * RatioOfVelocityToAreaReduction;
     }
 }

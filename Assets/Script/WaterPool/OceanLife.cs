@@ -7,14 +7,14 @@ public class OceanLife : MonoBehaviour
     [SerializeField]
     private string lifeName;
     [SerializeField]
-    private float lifeValue;//计算积分用，暂时没什么用
+    private int lifeValue;//计算积分用，暂时没什么用
     [SerializeField]
     private float lifeArea;//生物存活占据的面积
 
     [SerializeField]
     private float waterDecreaseRate = 1f;//每秒消耗的水资源
 
-    public float GetLifeValue()
+    public int GetLifeValue()
     {
         return lifeValue;
     }
