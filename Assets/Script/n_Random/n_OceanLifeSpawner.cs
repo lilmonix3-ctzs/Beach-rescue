@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class n_OceanLifeSpawner : MonoBehaviour
 {
-    [Header("¶àÖÖº£ÑóÉúÎïÔ¤ÖÆÌå")]
+    [Header("å¤šç§æµ·æ´‹ç”Ÿç‰©é¢„åˆ¶ä½“")]
     public List<GameObject> oceanLifePrefabs;
 
-    [Header("¸ñ×Ó´óĞ¡£¨ÓÃÓÚ·Ö²¼£©")]
+    [Header("æ ¼å­å¤§å°ï¼ˆç”¨äºåˆ†å¸ƒï¼‰")]
     public float cellSize = 0.8f;
 
-    [Header("Éú³ÉÉúÎïÕ¼Ë®³ØË®Á¿±È")]
+    [Header("ç”Ÿæˆç”Ÿç‰©å æ°´æ± æ°´é‡æ¯”")]
     public float waterOccupancyCoefficient = 0.5f;
 
-    [Header("ÉúÎï±êÇ©")]
+    [Header("ç”Ÿç‰©æ ‡ç­¾")]
     public string oceanLifeTag = "Oceanlife";
 
     private Reduce poolReduce;
@@ -33,46 +33,46 @@ public class n_OceanLifeSpawner : MonoBehaviour
         }
     }
 
-    // °´Ë®Á¿Ò»°ëÏŞÖÆÉú³ÉÉúÎï
+    // æŒ‰æ°´é‡ä¸€åŠé™åˆ¶ç”Ÿæˆç”Ÿç‰©
     public void SpawnOceanLivesByWaterLimit()
     {
         if (oceanLifePrefabs == null || oceanLifePrefabs.Count == 0)
         {
-            Debug.LogError("Çë¸øÁĞ±íÍÏÈëÉúÎïÔ¤ÖÆÌå");
+            Debug.LogError("è¯·ç»™åˆ—è¡¨æ‹–å…¥ç”Ÿç‰©é¢„åˆ¶ä½“");
             return;
         }
 
-        // Çå¿ÕÖ®Ç°Éú³ÉµÄÉúÎï
+        // æ¸…ç©ºä¹‹å‰ç”Ÿæˆçš„ç”Ÿç‰©
         ClearSpawnedLives();
 
-        // Ë®³Øµ±Ç°×ÜÃæ»ı
+        // æ°´æ± å½“å‰æ€»é¢ç§¯
         float poolTotalArea = GetPoolCurrentArea();
-        // ÉúÎï×ÜÕ¼ÓÃÃæ»ı²»ÄÜ³¬¹ıËù¶¨ÏµÊı
+        // ç”Ÿç‰©æ€»å ç”¨é¢ç§¯ä¸èƒ½è¶…è¿‡æ‰€å®šç³»æ•°
         float maxAllowLifeArea = poolTotalArea * waterOccupancyCoefficient;
 
         float nowTotalLifeArea = 0f;
         List<GameObject> spawnedLives = new List<GameObject>();
 
-        // Ñ­»·Éú³É£¬Ö±µ½³¬¹ıË®Á¿ÉÏÏŞ
-        int maxAttempts = 100; // ·ÀÖ¹ÎŞÏŞÑ­»·
+        // å¾ªç¯ç”Ÿæˆï¼Œç›´åˆ°è¶…è¿‡æ°´é‡ä¸Šé™
+        int maxAttempts = 100; // é˜²æ­¢æ— é™å¾ªç¯
         int attempts = 0;
 
         while (attempts < maxAttempts)
         {
             attempts++;
 
-            // Ëæ»úÑ¡Ò»ÖÖÉúÎïÔ¤ÖÆÌå
+            // éšæœºé€‰ä¸€ç§ç”Ÿç‰©é¢„åˆ¶ä½“
             GameObject randomPrefab = oceanLifePrefabs[Random.Range(0, oceanLifePrefabs.Count)];
             OceanLife lifeCfg = randomPrefab.GetComponent<OceanLife>();
             if (lifeCfg == null) continue;
 
-            // ÔÙ¼ÓÕâ¸öÉúÎï¾Í³¬Ò»°ëË®Á¿ ¡ú Í£Ö¹Éú³É
+            // å†åŠ è¿™ä¸ªç”Ÿç‰©å°±è¶…ä¸€åŠæ°´é‡ â†’ åœæ­¢ç”Ÿæˆ
             if (nowTotalLifeArea + lifeCfg.GetLifeArea() > maxAllowLifeArea)
             {
                 break;
             }
 
-            // Éú³ÉÉúÎï£¨ÏÈ·ÅÔÚÔ­µã£©
+            // ç”Ÿæˆç”Ÿç‰©ï¼ˆå…ˆæ”¾åœ¨åŸç‚¹ï¼‰
             GameObject life = Instantiate(randomPrefab, transform);
             life.transform.position = Vector3.zero;
             life.tag = oceanLifeTag;
@@ -80,32 +80,32 @@ public class n_OceanLifeSpawner : MonoBehaviour
             nowTotalLifeArea += lifeCfg.GetLifeArea();
         }
 
-        // Ê¹ÓÃ ItemRandomPlacer ÔÚÔ²ĞÎÇøÓòÄÚËæ»úÅÅÁĞÉúÎï
+        // ä½¿ç”¨ ItemRandomPlacer åœ¨åœ†å½¢åŒºåŸŸå†…éšæœºæ’åˆ—ç”Ÿç‰©
         if (spawnedLives.Count > 0)
         {
-            // »ñÈ¡Ë®³Ø°ë¾¶
+            // è·å–æ°´æ± åŠå¾„
             float poolRadius = Mathf.Sqrt(poolTotalArea / Mathf.PI)/2.5f;
 
-            // Ê¹ÓÃ¹¤¾ßÔÚÔ²ĞÎÇøÓòÄÚÅÅÁĞ
+            // ä½¿ç”¨å·¥å…·åœ¨åœ†å½¢åŒºåŸŸå†…æ’åˆ—
             ItemRandomPlacer.RandomPlaceInCircle(
-                transform,           // ¸¸ÎïÌå
-                oceanLifeTag,       // ±êÇ©
-                transform.position, // Ô²ĞÄ
-                poolRadius,         // °ë¾¶
-                cellSize            // ¸ñ×Ó´óĞ¡
+                transform,           // çˆ¶ç‰©ä½“
+                oceanLifeTag,       // æ ‡ç­¾
+                transform.position, // åœ†å¿ƒ
+                poolRadius,         // åŠå¾„
+                cellSize            // æ ¼å­å¤§å°
             );
         }
 
-        Debug.Log($"Éú³ÉÍê±Ï£¬¹²Éú³É {spawnedLives.Count} ¸öÉúÎï£¬ÉúÎï×ÜÕ¼ÓÃÃæ»ı£º{nowTotalLifeArea}£¬ÔÊĞí×î´óÒ»°ëÃæ»ı£º{maxAllowLifeArea}");
+        Debug.Log($"ç”Ÿæˆå®Œæ¯•ï¼Œå…±ç”Ÿæˆ {spawnedLives.Count} ä¸ªç”Ÿç‰©ï¼Œç”Ÿç‰©æ€»å ç”¨é¢ç§¯ï¼š{nowTotalLifeArea}ï¼Œå…è®¸æœ€å¤§ä¸€åŠé¢ç§¯ï¼š{maxAllowLifeArea}");
     }
 
-    // »ñÈ¡Ë®³Øµ±Ç°Êµ¼ÊÃæ»ı
+    // è·å–æ°´æ± å½“å‰å®é™…é¢ç§¯
     float GetPoolCurrentArea()
     {
         return poolReduce.GetCurrentArea();
     }
 
-    // Çå¿ÕËùÓĞÉú³ÉÉúÎï
+    // æ¸…ç©ºæ‰€æœ‰ç”Ÿæˆç”Ÿç‰©
     public void ClearSpawnedLives()
     {
         foreach (Transform child in transform)
@@ -115,5 +115,13 @@ public class n_OceanLifeSpawner : MonoBehaviour
                 Destroy(child.gameObject);
             }
         }
+    }
+
+    public void RegenerateLives()
+    {
+        ClearSpawnedLives();
+        hasSpawned = false;   // å…è®¸å†æ¬¡ç”Ÿæˆ
+        if (poolReduce != null)
+            SpawnOceanLivesByWaterLimit();
     }
 }

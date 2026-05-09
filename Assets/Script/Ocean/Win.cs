@@ -6,12 +6,12 @@ public class Win : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //Debug.Log("Íæ¼ÒÓ®ÁË£¡");
+        //Debug.Log("ç©å®¶èµ¢äº†ï¼");
         if (collision.gameObject.CompareTag("Player"))
         {
-            // ÏÔÊ¾Ê¤Àû½çÃæ
+            // æ˜¾ç¤ºèƒœåˆ©ç•Œé¢
             
-            GameOver.Instance.ShowGameOver();
+            GameOver.Instance.ShowGameOver(true);
         }
     }
 }

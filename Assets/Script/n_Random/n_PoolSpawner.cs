@@ -3,67 +3,82 @@ using System.Collections.Generic;
 
 public class n_PoolSpawner : MonoBehaviour
 {
-    [Header("Ë®³ØÔ¤ÖÆÌåÊı×é£¨¿ÉÍÏÈë¶à¸ö²»Í¬Ô¤ÖÆÌå£©")]
-    public GameObject[] poolPrefabs;  // ¸Ä³ÉÊı×é
+    [Header("æ°´æ± é¢„åˆ¶ä½“æ•°ç»„ï¼ˆå¯æ‹–å…¥å¤šä¸ªä¸åŒé¢„åˆ¶ä½“ï¼‰")]
+    public GameObject[] poolPrefabs;  // æ”¹æˆæ•°ç»„
 
-    [Header("Éú³ÉÊıÁ¿")]
+    [Header("ç”Ÿæˆæ•°é‡")]
     public int spawnCount = 5;
 
-    [Header("Éú³É·¶Î§£¨¾ØĞÎ£©")]
+    [Header("ç”ŸæˆèŒƒå›´ï¼ˆçŸ©å½¢ï¼‰")]
     public Vector2 spawnArea = new Vector2(20, 10);
 
-    [Header("¸ñ×Ó´óĞ¡")]
+    [Header("æ ¼å­å¤§å°")]
     public float cellSize = 2f;
 
-    [Header("Ë®³Ø±êÇ©")]
+    [Header("æ°´æ± æ ‡ç­¾")]
     public string poolTag = "WaterPool";
 
     void Start()
     {
-        SpawnPools();
+        //SpawnPools();
     }
 
     void SpawnPools()
     {
         if (poolPrefabs == null || poolPrefabs.Length == 0)
         {
-            Debug.LogError("ÇëÍÏÈëË®ÌÁÔ¤ÖÆÌåÊı×é£¡");
+            Debug.LogError("è¯·æ‹–å…¥æ°´å¡˜é¢„åˆ¶ä½“æ•°ç»„ï¼");
             return;
         }
 
-        // 1. Ëæ»úÉú³ÉËùÓĞË®³Ø£¨´ÓÊı×éÖĞËæ»úÑ¡ÔñÔ¤ÖÆÌå£©
+        // 1. éšæœºç”Ÿæˆæ‰€æœ‰æ°´æ± ï¼ˆä»æ•°ç»„ä¸­éšæœºé€‰æ‹©é¢„åˆ¶ä½“ï¼‰
         List<GameObject> spawnedPools = new List<GameObject>();
 
         for (int i = 0; i < spawnCount; i++)
         {
-            // Ëæ»úÑ¡ÔñÒ»¸öÔ¤ÖÆÌå
+            // éšæœºé€‰æ‹©ä¸€ä¸ªé¢„åˆ¶ä½“
             int randomIndex = Random.Range(0, poolPrefabs.Length);
             GameObject selectedPrefab = poolPrefabs[randomIndex];
 
             GameObject pool = Instantiate(selectedPrefab);
             pool.transform.SetParent(transform);
-            pool.transform.position = Vector3.zero; // ÁÙÊ±Î»ÖÃ
+            pool.transform.position = Vector3.zero; // ä¸´æ—¶ä½ç½®
             spawnedPools.Add(pool);
         }
 
-        // 2. ¸øËùÓĞÉú³ÉµÄË®³ØÉèÖÃ±êÇ©
+        // 2. ç»™æ‰€æœ‰ç”Ÿæˆçš„æ°´æ± è®¾ç½®æ ‡ç­¾
         foreach (GameObject pool in spawnedPools)
         {
             pool.tag = poolTag;
         }
 
-        // 3. Ê¹ÓÃ ItemRandomPlacer ¹¤¾ßÔÚ¾ØĞÎÇøÓòÄÚËæ»úÅÅÁĞ
+        // 3. ä½¿ç”¨ ItemRandomPlacer å·¥å…·åœ¨çŸ©å½¢åŒºåŸŸå†…éšæœºæ’åˆ—
         Vector2 rectMin = (Vector2)transform.position - spawnArea;
         Vector2 rectMax = (Vector2)transform.position + spawnArea;
 
         ItemRandomPlacer.RandomPlaceInRect(
-            transform,           // ¸¸ÎïÌå
-            poolTag,            // ±êÇ©
-            rectMin,            // ¾ØĞÎ×óÏÂ½Ç
-            rectMax,            // ¾ØĞÎÓÒÉÏ½Ç
-            cellSize            // ¸ñ×Ó´óĞ¡
+            transform,           // çˆ¶ç‰©ä½“
+            poolTag,            // æ ‡ç­¾
+            rectMin,            // çŸ©å½¢å·¦ä¸‹è§’
+            rectMax,            // çŸ©å½¢å³ä¸Šè§’
+            cellSize            // æ ¼å­å¤§å°
         );
 
-        Debug.Log($"³É¹¦Éú³É²¢ÅÅÁĞÁË {spawnCount} ¸öË®³Ø£¨´Ó {poolPrefabs.Length} ÖÖÔ¤ÖÆÌåÖĞËæ»úÑ¡Ôñ£©£¡");
+        Debug.Log($"æˆåŠŸç”Ÿæˆå¹¶æ’åˆ—äº† {spawnCount} ä¸ªæ°´æ± ï¼ˆä» {poolPrefabs.Length} ç§é¢„åˆ¶ä½“ä¸­éšæœºé€‰æ‹©ï¼‰ï¼");
+    }
+    public void ClearAllPools()
+    {
+        // åˆ é™¤æ‰€æœ‰æ ‡è®°ä¸º "WaterPool" çš„å­ç‰©ä½“
+        foreach (Transform child in transform)
+        {
+            if (child.CompareTag(poolTag))
+                Destroy(child.gameObject);
+        }
+    }
+
+    public void RegeneratePools()
+    {
+        ClearAllPools();
+        SpawnPools(); // åŸæœ‰ç”Ÿæˆæ–¹æ³•
     }
 }

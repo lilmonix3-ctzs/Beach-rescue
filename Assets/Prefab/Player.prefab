@@ -129,6 +129,9 @@ MonoBehaviour:
   moveSpeed: 5
   rb: {fileID: 5925226097858823465}
   maxSpeed: 10
+  enableBoundary: 1
+  minBoundary: {x: -28, y: -28}
+  maxBoundary: {x: 38, y: 28}
   childRb: {fileID: 0}
 --- !u!1 &4116521502040444670
 GameObject:
@@ -141,12 +144,12 @@ GameObject:
   - component: {fileID: 9148233249481597709}
   - component: {fileID: 8811339851496823904}
   - component: {fileID: 5042012776860802193}
-  - component: {fileID: 2188931535138651922}
   - component: {fileID: 4535701910490021824}
   - component: {fileID: 2740300104671139280}
+  - component: {fileID: 3112843028199153394}
   m_Layer: 0
   m_Name: Water Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -245,23 +248,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &2188931535138651922
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4116521502040444670}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ccccf909b77690f418609b4f6417caa4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startArea: 20
-  areaReducePerSecond: 10
-  RatioOfVelocityToAreaReduction: 0.1
-  isReduce: 0
-  rb: {fileID: 0}
 --- !u!58 &4535701910490021824
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -312,4 +298,24 @@ MonoBehaviour:
   moveSpeed: 5
   rb: {fileID: 5042012776860802193}
   maxSpeed: 10
+  enableBoundary: 1
+  minBoundary: {x: -28, y: -28}
+  maxBoundary: {x: 38, y: 28}
   childRb: {fileID: 0}
+--- !u!114 &3112843028199153394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4116521502040444670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccccf909b77690f418609b4f6417caa4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startArea: 5
+  areaReducePerSecond: 10
+  RatioOfVelocityToAreaReduction: 0.2
+  isReduce: 1
+  rb: {fileID: 0}
