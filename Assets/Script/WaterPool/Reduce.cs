@@ -157,6 +157,10 @@ public class Reduce : MonoBehaviour
             // 重新设置父对象（保持世界坐标）
             ol.transform.SetParent(this.transform.parent.transform, true);
             oceanLives.Add(ol);
+            areaNeededByLife += ol.GetLifeArea();
+            areaReducePerSecond += ol.GetWaterDecreaseRate();
+
+            Debug.Log($"合并水池：将 {ol.gameObject.name} 从 {other.gameObject.name} 移动到 {this.gameObject.name}");
         }
 
         // 重新排序海洋生物列表
