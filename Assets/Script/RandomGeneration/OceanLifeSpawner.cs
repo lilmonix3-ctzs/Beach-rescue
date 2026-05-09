@@ -81,6 +81,12 @@ public class OceanLifeSpawner : MonoBehaviour
 
         Debug.Log("生成完毕，生物总占用面积：" + nowTotalLifeArea
             + " 允许最大一半面积：" + maxAllowLifeArea);
+
+        // 生成完成后让 Reduce 刷新一次生物列表（避免 Reduce.Start 在生成前执行导致列表为空）
+        if (poolReduce == null)
+            poolReduce = GetComponentInChildren<Reduce>();
+        if (poolReduce != null)
+            poolReduce.GetOceanLife();
     }
 
     // 获取水池当前实际面积
