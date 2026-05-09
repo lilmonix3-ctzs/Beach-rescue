@@ -1,17 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameOver : MonoBehaviour
 {
 
-    public GameObject gameOverPanel; // ÓÎÏ·½áÊø½çÃæ
-    // Î¨Ò»¾²Ì¬ÊµÀı
+    public GameObject gameOverPanel; // æ¸¸æˆç»“æŸç•Œé¢
+    public Image resultImage;                 // ç”¨äºæ˜¾ç¤ºèƒœåˆ©/å¤±è´¥å›¾ç‰‡çš„ Image
+    public Sprite winSprite;
+    public Sprite loseSprite;
+    // å”¯ä¸€é™æ€å®ä¾‹
     public static GameOver Instance { get; private set; }
 
     private void Awake()
     {
-        // ±£Ö¤È«¾ÖÎ¨Ò»
+        // ä¿è¯å…¨å±€å”¯ä¸€
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -21,15 +25,17 @@ public class GameOver : MonoBehaviour
             Instance = this;
         }
     }
-    public void ShowGameOver()
+    public void ShowGameOver(bool IsWin)
     {
+        // æ ¹æ®èƒœè´Ÿåˆ‡æ¢å›¾ç‰‡
+        resultImage.sprite = IsWin ? winSprite : loseSprite;
         DataStore.Instance.AddDate();
-    Debug.Log("·ÖÊıÒÑ±£´æµ½ DataStore¡£µ±Ç°·ÖÊı£º" + DataStore.Instance.Score);
-        // ÏÔÊ¾ÓÎÏ·½áÊø½çÃæ
+        Debug.Log("åˆ†æ•°å·²ä¿å­˜åˆ° DataStoreã€‚å½“å‰åˆ†æ•°ï¼š" + DataStore.Instance.Score);
+        // æ˜¾ç¤ºæ¸¸æˆç»“æŸç•Œé¢
         //gameOverPanel.SetActive(true);
         gameOverPanel.GetComponent<PanelAnim>().Show();
         //Time.timeScale = 0;
-        Invoke("Sleep", 1f); // ÑÓ³Ù1Ãëºóµ÷ÓÃSleep·½·¨
+        Invoke("Sleep", 1f); // å»¶è¿Ÿ1ç§’åè°ƒç”¨Sleepæ–¹æ³•
     }
     private void Sleep()
     {

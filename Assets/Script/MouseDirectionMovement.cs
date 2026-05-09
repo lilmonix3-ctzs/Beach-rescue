@@ -9,11 +9,16 @@ public class MouseDirectionMovement2D : MonoBehaviour
     private Vector2 direction;
     public float maxSpeed = 10f;
 
- 
+    // 新增移动边界限制
+    public bool enableBoundary = true;
+    public Vector2 minBoundary;
+    public Vector2 maxBoundary;
+
     public Rigidbody2D childRb;
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        if (rb == null)
+            rb = GetComponent<Rigidbody2D>();
         //childRb = transform.GetComponentInChildren<Rigidbody2D>();
     }
 
@@ -29,18 +34,31 @@ public class MouseDirectionMovement2D : MonoBehaviour
     void FixedUpdate()
     {
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        rb.velocity = direction * moveSpeed;
-
         Vector2 rawDirection = (mousePos - transform.position);
+        Vector2 desiredVelocity = rawDirection * moveSpeed;
+        desiredVelocity = Vector2.ClampMagnitude(desiredVelocity, maxSpeed);
 
-        // 根据距离产生速度
-        Vector2 velocity = rawDirection * moveSpeed;
+        // 边界处理：限制速度，防止越界震动
+        if (enableBoundary)
+        {
+            Vector2 newPos = rb.position + desiredVelocity * Time.fixedDeltaTime;
 
-        // ⭐ 限制最大速度
-        velocity = Vector2.ClampMagnitude(velocity, maxSpeed);
+            // 左边界
+            if (newPos.x < minBoundary.x && desiredVelocity.x < 0)
+                desiredVelocity.x = 0;
+            // 右边界
+            if (newPos.x > maxBoundary.x && desiredVelocity.x > 0)
+                desiredVelocity.x = 0;
+            // 下边界
+            if (newPos.y < minBoundary.y && desiredVelocity.y < 0)
+                desiredVelocity.y = 0;
+            // 上边界
+            if (newPos.y > maxBoundary.y && desiredVelocity.y > 0)
+                desiredVelocity.y = 0;
+        }
 
-        rb.velocity = velocity;
-        
+        rb.velocity = desiredVelocity;
+
     }
 
     void ParentPositionUpdate()

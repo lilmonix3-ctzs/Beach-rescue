@@ -5,26 +5,26 @@ using UnityEngine;
 
 public class Reduce : MonoBehaviour
 {
-    [Header("³õÊ¼Ãæ»ı")]
+    [Header("åˆå§‹é¢ç§¯")]
     [SerializeField] private float startArea = 100f;
 
-    [Header("Ã¿Ãë¼õÉÙ¶àÉÙÃæ»ı")]
-    [SerializeField] private float areaReducePerSecond = 20f;//ÓëÉúÎïÁ¿Ïà¹Ø
+    [Header("æ¯ç§’å‡å°‘å¤šå°‘é¢ç§¯")]
+    [SerializeField] private float areaReducePerSecond = 20f;//ä¸ç”Ÿç‰©é‡ç›¸å…³
 
-    [Header("ËÙ¶È¶ÔÃæ»ı¼õÉÙµÄÓ°Ïì±ÈÀı")]
-    [SerializeField] private float RatioOfVelocityToAreaReduction = 0.1f; // ËÙ¶È¶ÔÃæ»ı¼õÉÙµÄÓ°Ïì±ÈÀı£¬ÉúÎïÁ¿Ó¦ÏŞÖÆ×î´óËÙ¶È
+    [Header("é€Ÿåº¦å¯¹é¢ç§¯å‡å°‘çš„å½±å“æ¯”ä¾‹")]
+    [SerializeField] private float RatioOfVelocityToAreaReduction = 0.1f; // é€Ÿåº¦å¯¹é¢ç§¯å‡å°‘çš„å½±å“æ¯”ä¾‹ï¼Œç”Ÿç‰©é‡åº”é™åˆ¶æœ€å¤§é€Ÿåº¦
 
-    //µ÷Õû£¨fsun£©ĞÂÔö¿ª¹Ø
-    [Header("ÊÇ·ñ¿ªÆô¿ÛË®¹¦ÄÜ")]
+    //è°ƒæ•´ï¼ˆfsunï¼‰æ–°å¢å¼€å…³
+    [Header("æ˜¯å¦å¼€å¯æ‰£æ°´åŠŸèƒ½")]
     [SerializeField] bool isReduce = false;
 
     private List<OceanLife> oceanLives;
 
     private float currentArea;
 
-    private float areaNeededByLife = 0f; // µ±Ç°ÉúÎïĞèÒªµÄ×ÜÃæ»ı
+    private float areaNeededByLife = 0f; // å½“å‰ç”Ÿç‰©éœ€è¦çš„æ€»é¢ç§¯
 
-    private int ValueOfLife; // µ±Ç°ÉúÎïµÄ×Ü¼ÛÖµ£¨»ı·Ö£©
+    private int ValueOfLife; // å½“å‰ç”Ÿç‰©çš„æ€»ä»·å€¼ï¼ˆç§¯åˆ†ï¼‰
 
     public Rigidbody2D rb;
     
@@ -49,19 +49,19 @@ public class Reduce : MonoBehaviour
         }
         scaleUniform();
 
-        // ×¢Òâ£ºÈ·±£ DataStore.Instance ²»Îª null£¨´Ë´¦±£³ÖÔ­Âß¼­£©
+        // æ³¨æ„ï¼šç¡®ä¿ DataStore.Instance ä¸ä¸º nullï¼ˆæ­¤å¤„ä¿æŒåŸé€»è¾‘ï¼‰
         if (DataStore.Instance != null && ValueOfLife!=0)
             DataStore.Instance.SetScore(ValueOfLife);
 
-        Debug.Log($"µ±Ç°·ÖÊı£º{DataStore.Instance.Score}");
+        Debug.Log($"å½“å‰åˆ†æ•°ï¼š{DataStore.Instance.Score}");
         if (currentArea==0)
-            GameOver.Instance.ShowGameOver();
+            GameOver.Instance.ShowGameOver(false);
     }
     void ReduceByTime()
     {
         if (currentArea > 0)
         {
-            // Ãæ»ıÏßĞÔ¼õÉÙ
+            // é¢ç§¯çº¿æ€§å‡å°‘
             currentArea -= areaReducePerSecond * Time.deltaTime;
             currentArea = Mathf.Max(currentArea, 0);
         }
@@ -70,19 +70,19 @@ public class Reduce : MonoBehaviour
     {
         if (currentArea > 0)
         {
-            // ¸ù¾İËÙ¶È¼õÉÙÃæ»ı
+            // æ ¹æ®é€Ÿåº¦å‡å°‘é¢ç§¯
             float reduceAmount = Time.deltaTime * rb.velocity.magnitude * RatioOfVelocityToAreaReduction; 
             currentArea -= reduceAmount;
             currentArea = Mathf.Max(currentArea, 0);
         }
     }
 
-    //µ÷Õû£¨fsun£©ÕûºÏµÈ±ÈËõ·Å
+    //è°ƒæ•´ï¼ˆfsunï¼‰æ•´åˆç­‰æ¯”ç¼©æ”¾
     private void scaleUniform()
     {
-        // ÓÉÃæ»ıÇó°ë¾¶
+        // ç”±é¢ç§¯æ±‚åŠå¾„
         float radius = Mathf.Sqrt(currentArea / Mathf.PI);
-        // µÈ±ÈËõ·Å
+        // ç­‰æ¯”ç¼©æ”¾
         transform.localScale = new Vector3(radius, radius, 1);
     }
 
@@ -92,9 +92,9 @@ public class Reduce : MonoBehaviour
 
         if (areaNeededByLife > currentArea && oceanLives.Count != 0)
         {
-            Debug.Log("µ±Ç°Ãæ»ı²»×ãÒÔÖ§³ÖËùÓĞÉúÎï");
+            Debug.Log("å½“å‰é¢ç§¯ä¸è¶³ä»¥æ”¯æŒæ‰€æœ‰ç”Ÿç‰©");
 
-            // È¡³öÁĞ±í×îºóÒ»¸öÉúÎï
+            // å–å‡ºåˆ—è¡¨æœ€åä¸€ä¸ªç”Ÿç‰©
             OceanLife lastLife = oceanLives[oceanLives.Count - 1];
 
             if (lastLife != null)
@@ -103,64 +103,64 @@ public class Reduce : MonoBehaviour
                 float lifeArea = lastLife.GetLifeArea();
                 float lifeRate = lastLife.GetWaterDecreaseRate();
 
-                // ¼õÈ¥ÏûºÄºÍÕ¼ÓÃÃæ»ı
+                // å‡å»æ¶ˆè€—å’Œå ç”¨é¢ç§¯
                 areaReducePerSecond -= lifeRate;
                 areaNeededByLife -= lifeArea;
 
-                // ´Ó·ÖÊı¿Û³ı£¨ÏÈ»º´æÔÙÏú»Ù£©
+                // ä»åˆ†æ•°æ‰£é™¤ï¼ˆå…ˆç¼“å­˜å†é”€æ¯ï¼‰
                 ValueOfLife -= lifeVal;
                 if (ValueOfLife < 0) ValueOfLife = 0;
 
                 lastLife.Die();
             }
 
-            oceanLives.RemoveAt(oceanLives.Count - 1); // ÁĞ±í×Ô¶¯±ä¶Ì£¬²»»áÁônull
+            oceanLives.RemoveAt(oceanLives.Count - 1); // åˆ—è¡¨è‡ªåŠ¨å˜çŸ­ï¼Œä¸ä¼šç•™null
         }
     }
 
-    // ÏÖÔÚ¹«¿ª£¬±ãÓÚÉú³ÉÆ÷ÔÚÉú³ÉÍê³Éºóµ÷ÓÃË¢ĞÂ
+    // ç°åœ¨å…¬å¼€ï¼Œä¾¿äºç”Ÿæˆå™¨åœ¨ç”Ÿæˆå®Œæˆåè°ƒç”¨åˆ·æ–°
     public void GetOceanLife()
     {
-        // ÖØĞÂÊÕ¼¯²¢ÖØÖÃ¼ÆÊı
+        // é‡æ–°æ”¶é›†å¹¶é‡ç½®è®¡æ•°
         ValueOfLife = 0;
 
         oceanLives = new List<OceanLife>();
 
-        // Ê×ÏÈ³¢ÊÔÔÚ parent ÏÂ²éÕÒ£¨Èç¹û parent Îª null£¬ÔòÔÚ×ÔÉí²éÕÒ£©
+        // é¦–å…ˆå°è¯•åœ¨ parent ä¸‹æŸ¥æ‰¾ï¼ˆå¦‚æœ parent ä¸º nullï¼Œåˆ™åœ¨è‡ªèº«æŸ¥æ‰¾ï¼‰
         Transform container = transform.parent != null ? transform.parent : transform;
         OceanLife[] found = container.GetComponentsInChildren<OceanLife>(true);
 
         if (found != null && found.Length > 0)
             oceanLives.AddRange(found);
 
-        Debug.Log($"GetOceanLife: ÔÚ {container.name} ÏÂÕÒµ½ {oceanLives.Count} ¸ö OceanLife");
+        Debug.Log($"GetOceanLife: åœ¨ {container.name} ä¸‹æ‰¾åˆ° {oceanLives.Count} ä¸ª OceanLife");
 
-        // ¿ìËÙÅÅĞò
+        // å¿«é€Ÿæ’åº
         if (oceanLives.Count > 0)
             QuickSort(oceanLives, 0, oceanLives.Count - 1);
 
         float areaReduceFromLife = 0f;
-        areaNeededByLife = 0; // ÖØÖÃ
+        areaNeededByLife = 0; // é‡ç½®
 
         foreach (var ol in oceanLives)
         {
             if (ol == null) continue;
-            Debug.Log("ÕÒµ½×ÓÎïÌå£º" + ol.gameObject.name + " value=" + ol.GetLifeValue());
+            Debug.Log("æ‰¾åˆ°å­ç‰©ä½“ï¼š" + ol.gameObject.name + " value=" + ol.GetLifeValue());
             areaNeededByLife += ol.GetLifeArea();
             areaReduceFromLife += ol.GetWaterDecreaseRate();
             ValueOfLife += ol.GetLifeValue();
         }
 
-        Debug.Log($"ValueOfLife ÀÛ¼Óºó = {ValueOfLife}");
+        Debug.Log($"ValueOfLife ç´¯åŠ å = {ValueOfLife}");
         areaReducePerSecond = areaReduceFromLife;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("Åö×²");
+        Debug.Log("ç¢°æ’");
         if (collision == null) return;
 
-        // ¼ì²éÅö×²ÎïÌå±êÇ©ÊÇ·ñÎª Player
+        // æ£€æŸ¥ç¢°æ’ç‰©ä½“æ ‡ç­¾æ˜¯å¦ä¸º Player
 
         if (collision.gameObject.CompareTag("WaterPool") && this.CompareTag("WaterPool") )return;
 
@@ -168,64 +168,64 @@ public class Reduce : MonoBehaviour
         if (otherReduce == null || otherReduce == this) return;
 
         if (!otherReduce.gameObject.CompareTag("WaterPool")) return;
-        Debug.Log("·¢ÉúË®³ØÅö×²£¬³¢ÊÔºÏ²¢Ë®³Ø");
+        Debug.Log("å‘ç”Ÿæ°´æ± ç¢°æ’ï¼Œå°è¯•åˆå¹¶æ°´æ± ");
         MergeWaterPool(otherReduce);
     }
 
-    // ½«ÁíÒ»¸öË®³ØºÏ²¢µ½µ±Ç°Ë®³Ø
+    // å°†å¦ä¸€ä¸ªæ°´æ± åˆå¹¶åˆ°å½“å‰æ°´æ± 
     void MergeWaterPool(Reduce other)
     {
         if (other == null || other == this) return;
 
-        // È·±£±¾³ØµÄ oceanLives ÁĞ±íÒÑ³õÊ¼»¯
+        // ç¡®ä¿æœ¬æ± çš„ oceanLives åˆ—è¡¨å·²åˆå§‹åŒ–
         if (oceanLives == null) oceanLives = new List<OceanLife>();
 
-        // ½«Ãæ»ıÏà¼Ó
+        // å°†é¢ç§¯ç›¸åŠ 
         currentArea += other.currentArea;
 
-        // ½«ÁíÒ»¸öË®³ØµÄÉúÎïÏûºÄ/Õ¼ÓÃÊı¾İ¼ÓÈë£¨Ê¹ÓÃÆäËû³ØÉÏÒÑÍ³¼ÆµÄÖµ£¬±ÜÃâÖØ¸´Í³¼Æ£©
+        // å°†å¦ä¸€ä¸ªæ°´æ± çš„ç”Ÿç‰©æ¶ˆè€—/å ç”¨æ•°æ®åŠ å…¥ï¼ˆä½¿ç”¨å…¶ä»–æ± ä¸Šå·²ç»Ÿè®¡çš„å€¼ï¼Œé¿å…é‡å¤ç»Ÿè®¡ï¼‰
         //areaReducePerSecond += other.areaReducePerSecond;
         //areaNeededByLife += other.areaNeededByLife;
 
-        // ½« other ÖĞµÄ OceanLife ÎïÌåÖØĞÂ parent µ½µ±Ç°Ë®³Ø£¬²¢¼ÓÈë±¾³ØÁĞ±í£¨²»ÔÙÖØ¸´Ôö¼Ó areaNeeded/areaReduce£©
+        // å°† other ä¸­çš„ OceanLife ç‰©ä½“é‡æ–° parent åˆ°å½“å‰æ°´æ± ï¼Œå¹¶åŠ å…¥æœ¬æ± åˆ—è¡¨ï¼ˆä¸å†é‡å¤å¢åŠ  areaNeeded/areaReduceï¼‰
         OceanLife[] others = other.transform.parent.gameObject.GetComponentsInChildren<OceanLife>();
         foreach (var ol in others)
         {
-            // Èç¹ûÒÑ¾­ÊÇ±¾³ØµÄ×ÓÎïÌåÔòÌø¹ı
+            // å¦‚æœå·²ç»æ˜¯æœ¬æ± çš„å­ç‰©ä½“åˆ™è·³è¿‡
             if (ol == null) continue;
             if (ol.transform.IsChildOf(this.transform.parent.transform)) continue;
 
-            // ÖØĞÂÉèÖÃ¸¸¶ÔÏó£¨±£³ÖÊÀ½ç×ø±ê£©
+            // é‡æ–°è®¾ç½®çˆ¶å¯¹è±¡ï¼ˆä¿æŒä¸–ç•Œåæ ‡ï¼‰
             ol.transform.SetParent(this.transform.parent.transform, true);
             oceanLives.Add(ol);
             areaNeededByLife += ol.GetLifeArea();
             areaReducePerSecond += ol.GetWaterDecreaseRate();
             ValueOfLife += ol.GetLifeValue();
 
-            Debug.Log($"ºÏ²¢Ë®³Ø£º½« {ol.gameObject.name} ´Ó {other.gameObject.name} ÒÆ¶¯µ½ {this.gameObject.name}");
-            Debug.Log($"¼ÛÖµ {DataStore.Instance.Score}");
+            Debug.Log($"åˆå¹¶æ°´æ± ï¼šå°† {ol.gameObject.name} ä» {other.gameObject.name} ç§»åŠ¨åˆ° {this.gameObject.name}");
+            Debug.Log($"ä»·å€¼ {DataStore.Instance.Score}");
         }
 
-        // ÖØĞÂÅÅĞòº£ÑóÉúÎïÁĞ±í
+        // é‡æ–°æ’åºæµ·æ´‹ç”Ÿç‰©åˆ—è¡¨
         if (oceanLives.Count > 0)
             QuickSort(oceanLives, 0, oceanLives.Count - 1);
 
-        // ¸üĞÂµ±Ç°Ëõ·Å£¨¸ù¾İºÏ²¢ºóµÄÃæ»ı£©
+        // æ›´æ–°å½“å‰ç¼©æ”¾ï¼ˆæ ¹æ®åˆå¹¶åçš„é¢ç§¯ï¼‰
         float radius = Mathf.Sqrt(currentArea / Mathf.PI);
         transform.localScale = new Vector3(radius, radius, 1);
 
-        // ÇåÀí±»ºÏ²¢µÄË®³Ø¶ÔÏó
+        // æ¸…ç†è¢«åˆå¹¶çš„æ°´æ± å¯¹è±¡
         other.currentArea = 0f;
         other.areaNeededByLife = 0f;
         other.areaReducePerSecond = 0f;
 
         Destroy(other.gameObject);
 
-        // ĞÂÔö£¨fsun£©ÖØĞÂÅÅÁĞËùÓĞÓãµÄÎ»ÖÃ
+        // æ–°å¢ï¼ˆfsunï¼‰é‡æ–°æ’åˆ—æ‰€æœ‰é±¼çš„ä½ç½®
         ResortFishPositions();
     }
 
-    //¿ìËÙÅÅĞò
+    //å¿«é€Ÿæ’åº
     void QuickSort(List<OceanLife> arr, int left, int right)
     {
         if (left >= right) return;
@@ -262,27 +262,27 @@ public class Reduce : MonoBehaviour
         return i;
     }
 
-    //µ÷Õû£¨fsun£©ĞÂÔö»ñµÃË®ÓòÃæ»ı·½·¨
+    //è°ƒæ•´ï¼ˆfsunï¼‰æ–°å¢è·å¾—æ°´åŸŸé¢ç§¯æ–¹æ³•
     public float GetCurrentArea()
     {
         return currentArea;
     }
 
-    // ĞÂÔö£¨fsun£©ÖØĞÂÅÅÁĞËùÓĞÓãµÄÎ»ÖÃ
+    // æ–°å¢ï¼ˆfsunï¼‰é‡æ–°æ’åˆ—æ‰€æœ‰é±¼çš„ä½ç½®
     void ResortFishPositions()
     {
         if (oceanLives == null || oceanLives.Count == 0) return;
 
-        // »ñÈ¡µ±Ç°Ë®³Ø°ë¾¶
+        // è·å–å½“å‰æ°´æ± åŠå¾„
         float poolRadius = transform.localScale.x / 2.5f;
 
-        // Ê¹ÓÃ ItemRandomPlacer ÖØĞÂÅÅÁĞ
+        // ä½¿ç”¨ ItemRandomPlacer é‡æ–°æ’åˆ—
         ItemRandomPlacer.RandomPlaceInCircle(
-            transform.parent,    // ¸¸ÎïÌå£¨Ë®³ØÈİÆ÷£©
-            "Oceanlife",            // Óã±êÇ©
-            transform.position, // Ô²ĞÄ
-            poolRadius,         // °ë¾¶
-            0.2f        // ¸ñ×Ó´óĞ¡
+            transform.parent,    // çˆ¶ç‰©ä½“ï¼ˆæ°´æ± å®¹å™¨ï¼‰
+            "Oceanlife",            // é±¼æ ‡ç­¾
+            transform.position, // åœ†å¿ƒ
+            poolRadius,         // åŠå¾„
+            0.2f        // æ ¼å­å¤§å°
         );
     }
 
