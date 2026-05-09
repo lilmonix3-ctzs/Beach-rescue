@@ -1822,6 +1822,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: WaterPool (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2151594141223045744, guid: f016595844f1af44fa4db6abe35af7ed, type: 3}
+      propertyPath: oceanLifePrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2151594141223045744, guid: f016595844f1af44fa4db6abe35af7ed, type: 3}
+      propertyPath: oceanLifePrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 614950610279627793, guid: c96d99b2084b84f4c95319573d7707ed, type: 3}
     - target: {fileID: 5742960798516663287, guid: f016595844f1af44fa4db6abe35af7ed, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.6
