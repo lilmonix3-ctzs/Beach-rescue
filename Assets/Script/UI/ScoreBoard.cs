@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class ScoreBoard : MonoBehaviour
 {
-    public Text txtScore; // InspectorÍÏÈëUIÎÄ±¾
+    public Text txtScore; // Inspectoræ‹–å…¥UIæ–‡æœ¬
     private List<int> scoreList = new List<int>();
-    private void Start()
+    private void OnEnable()
     {
         UpdateScore();
     }
@@ -15,7 +15,7 @@ public class ScoreBoard : MonoBehaviour
     {
         if (txtScore == null)
         {
-            Debug.LogError("ScoreBoard: txtScore Î´ÔÚ Inspector ÖĞ¸³Öµ¡£Çë°Ñ UI Text ÍÏµ½´Ë×Ö¶Î¡£");
+            Debug.LogError("ScoreBoard: txtScore æœªåœ¨ Inspector ä¸­èµ‹å€¼ã€‚è¯·æŠŠ UI Text æ‹–åˆ°æ­¤å­—æ®µã€‚");
             return;
         }
 
@@ -25,11 +25,11 @@ public class ScoreBoard : MonoBehaviour
             ds = FindObjectOfType<DataStore>();
             if (ds != null)
             {
-                Debug.LogWarning("ScoreBoard: DataStore.Instance Îª null£¬ÒÑÍ¨¹ı FindObjectOfType ÕÒµ½ÊµÀı¡£ÇëÔÚ³¡¾°ÖĞÈ·±£Ö»ÓĞÒ»¸ö DataStore ²¢ÇÒÆä Awake ÔÚ ScoreBoard Ö®Ç°Ö´ĞĞ¡£");
+                Debug.LogWarning("ScoreBoard: DataStore.Instance ä¸º nullï¼Œå·²é€šè¿‡ FindObjectOfType æ‰¾åˆ°å®ä¾‹ã€‚è¯·åœ¨åœºæ™¯ä¸­ç¡®ä¿åªæœ‰ä¸€ä¸ª DataStore å¹¶ä¸”å…¶ Awake åœ¨ ScoreBoard ä¹‹å‰æ‰§è¡Œã€‚");
             }
             else
             {
-                Debug.LogError("ScoreBoard: ÕÒ²»µ½ DataStore ÊµÀı¡£ÇëÔÚ³¡¾°ÖĞÌí¼ÓÒ»¸ö¹ÒÓĞ DataStore ½Å±¾µÄ GameObject¡£");
+                Debug.LogError("ScoreBoard: æ‰¾ä¸åˆ° DataStore å®ä¾‹ã€‚è¯·åœ¨åœºæ™¯ä¸­æ·»åŠ ä¸€ä¸ªæŒ‚æœ‰ DataStore è„šæœ¬çš„ GameObjectã€‚");
                 txtScore.text = "No data";
                 return;
             }

@@ -314,8 +314,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccccf909b77690f418609b4f6417caa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startArea: 0.4
-  areaReducePerSecond: 1
-  RatioOfVelocityToAreaReduction: 0.01
+  startArea: 5
+  areaReducePerSecond: 10
+  RatioOfVelocityToAreaReduction: 0.2
   isReduce: 1
   rb: {fileID: 0}
