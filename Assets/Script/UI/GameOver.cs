@@ -35,7 +35,7 @@ public class GameOver : MonoBehaviour
         //gameOverPanel.SetActive(true);
         gameOverPanel.GetComponent<PanelAnim>().Show();
         //Time.timeScale = 0;
-        Invoke("Sleep", 1f); // 延迟1秒后调用Sleep方法
+        Invoke("Sleep", 0.25f); // 延迟1秒后调用Sleep方法
     }
     private void Sleep()
     {
