@@ -29,7 +29,7 @@ public class GameOver : MonoBehaviour
     {
         // 根据胜负切换图片
         resultImage.sprite = IsWin ? winSprite : loseSprite;
-        DataStore.Instance.AddDate();
+        if(IsWin) DataStore.Instance.AddDate();
         Debug.Log("分数已保存到 DataStore。当前分数：" + DataStore.Instance.Score);
         // 显示游戏结束界面
         //gameOverPanel.SetActive(true);
